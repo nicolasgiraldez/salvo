@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Entity
 public class Ship {
 
     @Id
@@ -26,9 +28,8 @@ public class Ship {
 
     public Ship (){}
 
-    public Ship (String type, GamePlayer gamePlayer, List<String> locations) {
+    public Ship (String type, List<String> locations) {
         this.type = type;
-        this.gamePlayer = gamePlayer;
         this.locations = locations;
     }
 
@@ -66,7 +67,7 @@ public class Ship {
 
     public Map<String, Object> toDTO() {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("id", this.getId());
+        //dto.put("id", this.getId());
         dto.put("type", this.getType());
         dto.put("locations", this.getLocations());
         return dto;

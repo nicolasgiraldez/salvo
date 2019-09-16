@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.toList;
 
 @Entity
@@ -63,10 +65,17 @@ public class Game {
 
     public Map<String, Object> toDTO() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        Stream<Map<String, Object>> gamePlayerDTO = getGamePlayer().stream().map(GamePlayer::toDTO);
         dto.put("id", getId());
         dto.put("created", getCreationDate());
-        dto.put("gamePlayers", getGamePlayer().stream().map(GamePlayer::toDTO).collect(Collectors.toList()));
+        dto.put("gamePlayers", ((Stream) gamePlayerDTO).collect(toList()));
         return dto;
+    }
+
+    private List<Map> shipLocationsList(Set<Ship> ships) {
+        return ships.stream()
+                .map(ship -> ship.toDTO())
+                .collect(Collectors.toList());
     }
 
 }
