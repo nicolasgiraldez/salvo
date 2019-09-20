@@ -68,7 +68,7 @@ public class Game {
         Stream<Map<String, Object>> gamePlayerDTO = getGamePlayer().stream().map(GamePlayer::toDTO);
         dto.put("id", getId());
         dto.put("created", getCreationDate());
-        dto.put("gamePlayers", ((Stream) gamePlayerDTO).collect(toList()));
+        dto.put("gamePlayers", gamePlayerDTO.collect(toList()));
         return dto;
     }
 
