@@ -7,9 +7,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.5.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.5.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/static/game.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/static/game.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/resources/main/static/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/static/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/static/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/game.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/game.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/game.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -193,7 +192,7 @@
       <option name="presentableId" value="Default" />
       <updated>1566862081191</updated>
       <workItem from="1566862083038" duration="10652000" />
-      <workItem from="1567515853279" duration="68655000" />
+      <workItem from="1567515853279" duration="69564000" />
     </task>
     <servers />
   </component>
