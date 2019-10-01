@@ -20,13 +20,15 @@ $(function() {
     function getColumnsHtml(i) {
         let html = "";
         for (let j = 0; j < numbers.length; j++) {
-            let cellContent = "";
+            //let cellContent = "";
+            let cellColor = "darkblue";
             for (let k = 0; k < locations.length; k++) {
                 if (locations[k] == letters[i] + numbers[j]) {
-                    cellContent = "si";
+                    //cellContent = "si";
+                    cellColor = "gray";
                 }
             }
-            html = html + "<td>" + cellContent + "</td>";
+            html = html + "<td style='background-color: " + cellColor + "'></td>";
         }
         return html;
     }
@@ -50,9 +52,8 @@ $(function() {
     }
 
     function setLocations(data) {
-        locations = data.ships[0].locations
-        console.log(data.ships);
-        console.log(data.ships.map(function(ship) { return ship.locations}));
+        mappedLocations = data.ships.map(function(ship) { return ship.locations });
+        locations = [].concat.apply([], mappedLocations);
     }
 
     function loadData() {
