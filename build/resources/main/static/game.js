@@ -7,7 +7,7 @@ $(function() {
     let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
     let letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
-    // posiciones de todos los barcos
+    // posiciones de todos los barcos del jugador
     let locations = [];
 
     // genera el HTML de los encabezados de la grilla
@@ -79,7 +79,7 @@ $(function() {
         document.getElementById("players-data").innerHTML = thisPlayer + " (you) vs " + otherPlayer;
     }
 
-    // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los barcos de la partida
+    // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los barcos del jugador
     function setLocations(data) {
         mappedLocations = data.ships.map(function(ship) { return ship.locations });
         locations = [].concat.apply([], mappedLocations);

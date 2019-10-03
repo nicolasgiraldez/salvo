@@ -21,7 +21,7 @@ public class Player {
     private String name;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayer;
+    Set<GamePlayer> gamePlayers;
 
     public Player() { }
 
@@ -54,21 +54,21 @@ public class Player {
         this.name = name;
     }
 
-    public Set<GamePlayer> getGamePlayer() {
-        return gamePlayer;
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
     }
 
     public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setPlayer(this);
-        this.gamePlayer.add(gamePlayer);
+        this.gamePlayers.add(gamePlayer);
     }
 
-    public void setGamePlayer(Set<GamePlayer> gamePlayer) {
-        this.gamePlayer = gamePlayer;
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 
     public List<Game> getGames() {
-        return gamePlayer.stream().map(sub -> sub.getGame()).collect(toList());
+        return gamePlayers.stream().map(sub -> sub.getGame()).collect(toList());
     }
 
     public Map<String, Object> toDTO() {
