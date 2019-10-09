@@ -8,7 +8,9 @@ $(function () {
     let letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
     // posiciones de todos los barcos del jugador
-    let locations = [];
+    let shipLocations = [];
+
+    let salvoLocations = [];
 
     // genera el HTML de los encabezados de la grilla
     function getHeadersHtml(headers) {
@@ -18,13 +20,13 @@ $(function () {
     }
 
     // dibuja los encabezados
-    function renderHeaders() {
+    function renderHeaders(numbersId) {
         var html = getHeadersHtml(numbers);
-        document.getElementById("grid-numbers").innerHTML = html;
+        document.getElementById(numbersId).innerHTML = html;
     }
 
     // genera el HTML de las columnas
-    function getColumnsHtml(i) {
+    function getColumnsHtml(i, locations) {
         let html = "";
         for (let j = 0; j < numbers.length; j++) {
             //let cellContent = "";
@@ -41,24 +43,30 @@ $(function () {
     }
 
     // genera el HTML de las filas (depende de getColumnsHtml)
-    function getRowsHtml() {
+    function getRowsHtml(locations) {
         let html = "";
         for (let i = 0; i < letters.length; i++) {
-            html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i) + "</tr>";
+            html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i, locations) + "</tr>";
         }
         return html;
     }
 
     // dibuja las filas de la grilla
-    function renderRows() {
-        var html = getRowsHtml();
-        document.getElementById("grid-rows").innerHTML = html;
+    function renderRows(locations, rowsId) {
+        var html = getRowsHtml(locations);
+        document.getElementById(rowsId).innerHTML = html;
     }
 
-    // dibuja la grilla
-    function renderTable() {
-        renderHeaders();
-        renderRows();
+    // dibuja la grilla de barcos
+    function renderShipTable(shipLocations) {
+        renderHeaders("ship-grid-numbers");
+        renderRows(shipLocations, "ship-grid-rows");
+    }
+
+    // dibuja la grilla de salvos
+    function renderSalvoTable(salvoLocations) {
+        renderHeaders("salvo-grid-numbers");
+        renderRows(salvoLocations, "salvo-grid-rows");
     }
 
     // muestra los datos de los jugadores de la partida
@@ -79,21 +87,29 @@ $(function () {
     }
 
     // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los barcos del jugador
-    function setLocations(data) {
+    function setShipLocations(data) {
         mappedLocations = data.ships.map(function (ship) {
             return ship.locations
         });
-        locations = [].concat.apply([], mappedLocations);
+        shipLocations = [].concat.apply([], mappedLocations);
+    }
+
+    function setSalvoLocations(data) {
+        mappedLocations = data.salvoes.map(function (salvo) {
+            return salvo.locations
+        });
+        salvoLocations = [].concat.apply([], mappedLocations);
     }
 
     // carga los datos del gameplayer según el parámetro 'gp' en la URL y llama a los métodos que dibujan la grilla
     function loadData() {
         $.get("/api/game_view/" + urlParams.get('gp'))
             .done(function (data) {
-                //console.log(data);
-                setLocations(data);
+                setShipLocations(data);
+                setSalvoLocations(data);
                 showPlayersData(data);
-                renderTable();
+                renderShipTable(shipLocations);
+                renderSalvoTable(salvoLocations);
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Failed: " + textStatus);
