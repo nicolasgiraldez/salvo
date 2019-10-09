@@ -1,11 +1,13 @@
 package com.codeoftheweb.salvo.model;
 
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import static java.util.stream.Collectors.toList;
 
 @Entity
@@ -20,10 +22,11 @@ public class Player {
 
     private String name;
 
-    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
-    public Player() { }
+    public Player() {
+    }
 
     public Player(String email, String name) {
         this.email = email;

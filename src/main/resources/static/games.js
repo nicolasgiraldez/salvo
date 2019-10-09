@@ -1,10 +1,12 @@
-$(function() {
+$(function () {
 
     // display list
 
     function updateList(data) {
         let htmlList = data.map(function (games) {
-            return  '<li>' + new Date(games.created).toLocaleString() + ' ' + games.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</li>';
+            return '<li>' + new Date(games.created).toLocaleString() + ' ' + games.gamePlayers.map(function (p) {
+                return p.player.email
+            }).join(', ') + '</li>';
         }).join('');
         document.getElementById("game-list").innerHTML = htmlList;
     }
@@ -13,11 +15,11 @@ $(function() {
 
     function loadData() {
         $.get("/api/games")
-            .done(function(data) {
+            .done(function (data) {
                 updateList(data);
             })
-            .fail(function( jqXHR, textStatus ) {
-                alert( "Failed: " + textStatus );
+            .fail(function (jqXHR, textStatus) {
+                alert("Failed: " + textStatus);
             });
     }
 

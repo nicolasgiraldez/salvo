@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     // display text in the output area
     function showOutput(text) {
@@ -9,11 +9,11 @@ $(function() {
 
     function loadData() {
         $.get("/players")
-            .done(function(data) {
+            .done(function (data) {
                 showOutput(JSON.stringify(data, null, 2));
             })
-            .fail(function( jqXHR, textStatus ) {
-                showOutput( "Failed: " + textStatus );
+            .fail(function (jqXHR, textStatus) {
+                showOutput("Failed: " + textStatus);
             });
     }
 
@@ -36,14 +36,14 @@ $(function() {
             },
             dataType: "text",
             url: "/players",
-            data: JSON.stringify({ "email": email })
+            data: JSON.stringify({"email": email})
         })
-            .done(function( ) {
-                showOutput( "Saved -- reloading");
+            .done(function () {
+                showOutput("Saved -- reloading");
                 loadData();
             })
-            .fail(function( jqXHR, textStatus ) {
-                showOutput( "Failed: " + textStatus );
+            .fail(function (jqXHR, textStatus) {
+                showOutput("Failed: " + textStatus);
             });
     }
 

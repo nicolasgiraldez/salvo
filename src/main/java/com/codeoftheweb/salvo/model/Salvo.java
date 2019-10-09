@@ -9,14 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-public class Ship {
+public class Salvo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-
-    private String type;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gamePlayer_id")
@@ -26,11 +24,14 @@ public class Ship {
     @Column(name = "location")
     private List<String> locations = new ArrayList<>();
 
-    public Ship() {
+    private int turn;
+
+    public Salvo() {
     }
 
-    public Ship(String type, List<String> locations) {
-        this.type = type;
+    public Salvo(GamePlayer gamePlayer, int turn, List<String> locations) {
+        this.gamePlayer = gamePlayer;
+        this.turn = turn;
         this.locations = locations;
     }
 
@@ -40,14 +41,6 @@ public class Ship {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String Type) {
-        this.type = type;
     }
 
     public GamePlayer getGamePlayer() {
@@ -66,11 +59,21 @@ public class Ship {
         this.locations = locations;
     }
 
+    public int getTurn() {
+        return turn;
+    }
+
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
+
     public Map<String, Object> toDTO() {
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("type", this.getType());
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("turn", this.getTurn());
+        dto.put("player", this.getGamePlayer().getPlayer().getId());
         dto.put("locations", this.getLocations());
         return dto;
     }
 
 }
+

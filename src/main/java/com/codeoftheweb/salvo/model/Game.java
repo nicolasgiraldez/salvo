@@ -2,6 +2,7 @@ package com.codeoftheweb.salvo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class Game {
     private long id;
     private Date creationDate;
 
-    @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
     public Game() {

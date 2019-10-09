@@ -1,7 +1,7 @@
 package com.codeoftheweb.salvo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -14,15 +14,18 @@ public class GamePlayer {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name = "game_id")
     private Game game;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name = "player_id")
     private Player player;
 
-    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     private Set<Ship> ships = new HashSet<>();
+
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    private Set<Salvo> salvoes = new HashSet<>();
 
     private Date joinDate;
 
@@ -86,9 +89,22 @@ public class GamePlayer {
         this.ships = ships;
     }
 
-    public void addShip(Ship ship){
+    public Set<Salvo> getSalvoes() {
+        return salvoes;
+    }
+
+    public void setSalvoes(Set<Salvo> salvoes) {
+        this.salvoes = salvoes;
+    }
+
+    public void addShip(Ship ship) {
         ship.setGamePlayer(this);
         this.ships.add(ship);
+    }
+
+    public void addSalvo(Salvo salvo) {
+        salvo.setGamePlayer(this);
+        this.salvoes.add(salvo);
     }
 
     public Map<String, Object> toDTO() {

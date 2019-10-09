@@ -2,6 +2,7 @@ package com.codeoftheweb.salvo.controller;
 
 import com.codeoftheweb.salvo.model.Game;
 import com.codeoftheweb.salvo.model.GamePlayer;
+import com.codeoftheweb.salvo.model.Salvo;
 import com.codeoftheweb.salvo.model.Ship;
 import com.codeoftheweb.salvo.repository.GamePlayerRepository;
 import com.codeoftheweb.salvo.repository.GameRepository;
@@ -42,16 +43,22 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
+    private List<Map> salvoesList(Set<Salvo> salvoes) {
+        return salvoes.stream()
+                .map(salvo -> salvo.toDTO())
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping("/game_view/{gamePlayerID}")
-    public Map<String,Object> getGameView(@PathVariable Long gamePlayerID) {
+    public Map<String, Object> getGameView(@PathVariable Long gamePlayerID) {
         GamePlayer gamePlayer = gamePlayerRepository.getOne(gamePlayerID);
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", gamePlayer.getGame().getId());
         dto.put("created", gamePlayer.getGame().getCreationDate());
         dto.put("gamePlayers", gamePlayerList(gamePlayer.getGame().getGamePlayers()));
         dto.put("ships", shipsList(gamePlayer.getShips()));
+        dto.put("salvoes", salvoesList(gamePlayer.getSalvoes()));
         return dto;
     }
-
 
 }

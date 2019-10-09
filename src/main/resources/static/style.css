@@ -1,6 +1,7 @@
 table {
     width: 90%;
 }
+
 td {
     width: 9%;
     position: relative;
@@ -8,11 +9,13 @@ td {
     font-size: 40px;
     color: darkmagenta;
 }
+
 td:after {
     content: '';
     display: block;
     margin-top: 100%;
 }
+
 td .content {
     position: absolute;
     top: 0;

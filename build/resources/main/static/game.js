@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     // parametros de URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -12,7 +12,7 @@ $(function() {
 
     // genera el HTML de los encabezados de la grilla
     function getHeadersHtml(headers) {
-        return "<tr><th></th>" + headers.map(function(header) {
+        return "<tr><th></th>" + headers.map(function (header) {
             return "<th>" + header + "</th>";
         }).join("") + "</tr>";
     }
@@ -43,7 +43,7 @@ $(function() {
     // genera el HTML de las filas (depende de getColumnsHtml)
     function getRowsHtml() {
         let html = "";
-        for (let i = 0; i < letters.length; i ++) {
+        for (let i = 0; i < letters.length; i++) {
             html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i) + "</tr>";
         }
         return html;
@@ -71,8 +71,7 @@ $(function() {
         if (gamePlayer1.id == urlParams.get('gp')) {
             thisPlayer = gamePlayer1.player.email;
             otherPlayer = gamePlayer2.player.email;
-        }
-        else {
+        } else {
             thisPlayer = gamePlayer2.player.email;
             otherPlayer = gamePlayer1.player.email;
         }
@@ -81,21 +80,23 @@ $(function() {
 
     // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los barcos del jugador
     function setLocations(data) {
-        mappedLocations = data.ships.map(function(ship) { return ship.locations });
+        mappedLocations = data.ships.map(function (ship) {
+            return ship.locations
+        });
         locations = [].concat.apply([], mappedLocations);
     }
 
     // carga los datos del gameplayer según el parámetro 'gp' en la URL y llama a los métodos que dibujan la grilla
     function loadData() {
-        $.get("/api/game_view/"+urlParams.get('gp'))
-            .done(function(data) {
+        $.get("/api/game_view/" + urlParams.get('gp'))
+            .done(function (data) {
                 //console.log(data);
                 setLocations(data);
                 showPlayersData(data);
                 renderTable();
             })
-            .fail(function( jqXHR, textStatus ) {
-                alert( "Failed: " + textStatus );
+            .fail(function (jqXHR, textStatus) {
+                alert("Failed: " + textStatus);
             });
     }
 
