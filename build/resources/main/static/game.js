@@ -10,6 +10,7 @@ $(function () {
     // posiciones de todos los barcos del jugador
     let shipLocations = [];
 
+    // posiciones de todos los salvos lanzados
     let salvoLocations = [];
 
     // genera el HTML de los encabezados de la grilla
@@ -26,15 +27,13 @@ $(function () {
     }
 
     // genera el HTML de las columnas
-    function getColumnsHtml(i, locations) {
+    function getColumnsHtml(i, locations, color) {
         let html = "";
         for (let j = 0; j < numbers.length; j++) {
-            //let cellContent = "";
             let cellColor = "darkblue";
             for (let k = 0; k < locations.length; k++) {
                 if (locations[k] == letters[i] + numbers[j]) {
-                    //cellContent = "si";
-                    cellColor = "gray";
+                    cellColor = color;
                 }
             }
             html = html + "<td style='background-color: " + cellColor + "'></td>";
@@ -43,30 +42,36 @@ $(function () {
     }
 
     // genera el HTML de las filas (depende de getColumnsHtml)
-    function getRowsHtml(locations) {
+    function getRowsHtml(locations, color) {
         let html = "";
         for (let i = 0; i < letters.length; i++) {
-            html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i, locations) + "</tr>";
+            html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i, locations, color) + "</tr>";
         }
         return html;
     }
 
     // dibuja las filas de la grilla
-    function renderRows(locations, rowsId) {
-        var html = getRowsHtml(locations);
+    function renderRows(locations, rowsId, color) {
+        var html = getRowsHtml(locations, color);
+        document.getElementById(rowsId).innerHTML = html;
+    }
+
+    // dibuja las filas de la grilla
+    function renderRows(locations, rowsId, color) {
+        var html = getRowsHtml(locations, color);
         document.getElementById(rowsId).innerHTML = html;
     }
 
     // dibuja la grilla de barcos
     function renderShipTable(shipLocations) {
         renderHeaders("ship-grid-numbers");
-        renderRows(shipLocations, "ship-grid-rows");
+        renderRows(shipLocations, "ship-grid-rows", "gray");
     }
 
     // dibuja la grilla de salvos
     function renderSalvoTable(salvoLocations) {
         renderHeaders("salvo-grid-numbers");
-        renderRows(salvoLocations, "salvo-grid-rows");
+        renderRows(salvoLocations, "salvo-grid-rows", "orange");
     }
 
     // muestra los datos de los jugadores de la partida
@@ -94,6 +99,7 @@ $(function () {
         shipLocations = [].concat.apply([], mappedLocations);
     }
 
+    // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los salvos lanzados
     function setSalvoLocations(data) {
         mappedLocations = data.salvoes.map(function (salvo) {
             return salvo.locations
