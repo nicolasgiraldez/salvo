@@ -111,6 +111,14 @@ public class GamePlayer {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", getId());
         dto.put("player", getPlayer().toDTO());
+
+        Score score = this.getPlayer().getScore(this.getGame());
+        if (score != null) {
+            dto.put("score", score.getScore());
+        } else {
+            dto.put("score", null);
+        }
+
         return dto;
     }
 }
