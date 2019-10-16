@@ -18,7 +18,7 @@ public class SalvoApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository) {
+    public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
         return (args) -> {
 
             // save a couple of players
@@ -209,6 +209,23 @@ public class SalvoApplication {
             salvoRepository.save(salvo20);
             Salvo salvo21 = new Salvo(gameplayer10, 3, Arrays.asList("H1", "H8"));
             salvoRepository.save(salvo21);
+
+            Score score1 = new Score(game1, jackBauer, 1.0);
+            scoreRepository.save(score1);
+            Score score2 = new Score(game1, chloeOBrian, 0.0);
+            scoreRepository.save(score2);
+            Score score3 = new Score(game2, jackBauer, 0.5);
+            scoreRepository.save(score3);
+            Score score4 = new Score(game2, chloeOBrian, 0.5);
+            scoreRepository.save(score4);
+            Score score5 = new Score(game3, chloeOBrian, 1.0);
+            scoreRepository.save(score5);
+            Score score6 = new Score(game3, tonyAlmeida, 0.0);
+            scoreRepository.save(score6);
+            Score score7 = new Score(game4, chloeOBrian, 0.5);
+            scoreRepository.save(score7);
+            Score score8 = new Score(game4, jackBauer, 0.5);
+            scoreRepository.save(score8);
 
         };
     }

@@ -22,6 +22,9 @@ public class Game {
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private Set<Score> scores;
+
     public Game() {
         this.creationDate = new Date();
     }
@@ -62,6 +65,19 @@ public class Game {
     @JsonIgnoreProperties(value = "games")
     public List<Player> getPlayers() {
         return gamePlayers.stream().map(sub -> sub.getPlayer()).collect(toList());
+    }
+
+    public Set<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
+
+    public void addScores(Score score) {
+        score.setGame(this);
+        this.scores.add(score);
     }
 
     public Map<String, Object> toDTO() {

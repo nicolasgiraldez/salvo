@@ -26,52 +26,82 @@ $(function () {
         document.getElementById(numbersId).innerHTML = html;
     }
 
-    // genera el HTML de las columnas
-    function getColumnsHtml(i, locations, color) {
+    // genera el HTML de las columnas de la grilla de barcos
+    function getShipColumnsHtml(i, locations, color) {
         let html = "";
         for (let j = 0; j < numbers.length; j++) {
             let cellColor = "darkblue";
+            let hitText = "";
             for (let k = 0; k < locations.length; k++) {
-                if (locations[k] == letters[i] + numbers[j]) {
+                if (locations[k].location == letters[i] + numbers[j]) {
                     cellColor = color;
+                    if (locations[k].hit > 0) {
+                        hitText = "Hit on turn: " + locations[k].hit;
+                    }
                 }
             }
-            html = html + "<td style='background-color: " + cellColor + "'></td>";
+            html = html + "<td style='background-color: " + cellColor + "'>" + hitText + "</td>";
         }
         return html;
     }
 
-    // genera el HTML de las filas (depende de getColumnsHtml)
-    function getRowsHtml(locations, color) {
+    // genera el HTML de las columnas de la grilla de salvos
+    function getSalvoColumnsHtml(i, locations, color) {
+        let html = "";
+        for (let j = 0; j < numbers.length; j++) {
+            let cellColor = "darkblue";
+            let turnText = "";
+            for (let k = 0; k < locations.length; k++) {
+                if (locations[k].location == letters[i] + numbers[j]) {
+                    cellColor = color;
+                    turnText = "Turn: " + locations[k].turn;
+                }
+            }
+            html = html + "<td style='background-color: " + cellColor + "'>" + turnText + "</td>";
+        }
+        return html;
+    }
+
+    // genera el HTML de las filas de la grilla de barcos
+    function getShipRowsHtml(locations, color) {
         let html = "";
         for (let i = 0; i < letters.length; i++) {
-            html = html + "<tr><th>" + letters[i] + "</th>" + getColumnsHtml(i, locations, color) + "</tr>";
+            html = html + "<tr><th>" + letters[i] + "</th>" + getShipColumnsHtml(i, locations, color) + "</tr>";
         }
         return html;
     }
 
-    // dibuja las filas de la grilla
-    function renderRows(locations, rowsId, color) {
-        var html = getRowsHtml(locations, color);
+    // genera el HTML de las filas de la grilla de salvos
+    function getSalvoRowsHtml(locations, color) {
+        let html = "";
+        for (let i = 0; i < letters.length; i++) {
+            html = html + "<tr><th>" + letters[i] + "</th>" + getSalvoColumnsHtml(i, locations, color) + "</tr>";
+        }
+        return html;
+    }
+
+    // dibuja las filas de la grilla de barcos
+    function renderShipRows(locations, rowsId, color) {
+        var html = getShipRowsHtml(locations, color);
         document.getElementById(rowsId).innerHTML = html;
     }
 
-    // dibuja las filas de la grilla
-    function renderRows(locations, rowsId, color) {
-        var html = getRowsHtml(locations, color);
+    // dibuja las filas de la grilla de salvos
+    function renderSalvoRows(locations, rowsId, color) {
+        var html = getSalvoRowsHtml(locations, color);
         document.getElementById(rowsId).innerHTML = html;
     }
 
     // dibuja la grilla de barcos
     function renderShipTable(shipLocations) {
         renderHeaders("ship-grid-numbers");
-        renderRows(shipLocations, "ship-grid-rows", "gray");
+        renderShipRows(shipLocations, "ship-grid-rows", "gray");
     }
 
     // dibuja la grilla de salvos
     function renderSalvoTable(salvoLocations) {
         renderHeaders("salvo-grid-numbers");
-        renderRows(salvoLocations, "salvo-grid-rows", "orange");
+        renderSalvoRows(salvoLocations, "salvo-grid-rows", "orange");
     }
 
     // muestra los datos de los jugadores de la partida
@@ -92,27 +122,47 @@ $(function () {
     }
 
     // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los barcos del jugador
-    function setShipLocations(data) {
+    function getShipLocations(data) {
+
+        // obtiene las ubicaciones de los salvos para chequear si los barcos fueron golpeados
+        salvoLocations = getSalvoLocations(data);
+
         mappedLocations = data.ships.map(function (ship) {
-            return ship.locations
+            let locations = ship.locations;
+            let locationsWithHits = [];
+            for (let i = 0; i < locations.length; i++) {
+                let hitOnTurn = 0;
+                let wasHit = salvoLocations.find(o => o.location === locations[i])
+                if (wasHit) {
+                    hitOnTurn = wasHit.turn;
+                }
+                locationsWithHits.push({location: locations[i], hit: hitOnTurn});
+            }
+            return locationsWithHits
         });
-        shipLocations = [].concat.apply([], mappedLocations);
+        return [].concat.apply([], mappedLocations);
     }
 
     // recibe los datos del gameplayer y setea en el array locations las posiciones de todos los salvos lanzados
-    function setSalvoLocations(data) {
+    function getSalvoLocations(data) {
         mappedLocations = data.salvoes.map(function (salvo) {
-            return salvo.locations
+            let turn = salvo.turn;
+            let locations = salvo.locations;
+            let locationsWithTurns = [];
+            for (let i = 0; i < locations.length; i++) {
+                locationsWithTurns.push({location: locations[i], turn: turn});
+            }
+            return locationsWithTurns
         });
-        salvoLocations = [].concat.apply([], mappedLocations);
+        return [].concat.apply([], mappedLocations);
     }
 
     // carga los datos del gameplayer según el parámetro 'gp' en la URL y llama a los métodos que dibujan la grilla
     function loadData() {
         $.get("/api/game_view/" + urlParams.get('gp'))
             .done(function (data) {
-                setShipLocations(data);
-                setSalvoLocations(data);
+                shipLocations = getShipLocations(data);
+                salvoLocations = getSalvoLocations(data);
                 showPlayersData(data);
                 renderShipTable(shipLocations);
                 renderSalvoTable(salvoLocations);
