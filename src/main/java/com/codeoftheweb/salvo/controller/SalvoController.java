@@ -1,18 +1,13 @@
 package com.codeoftheweb.salvo.controller;
 
-import com.codeoftheweb.salvo.model.Game;
-import com.codeoftheweb.salvo.model.GamePlayer;
-import com.codeoftheweb.salvo.model.Salvo;
-import com.codeoftheweb.salvo.model.Ship;
+import com.codeoftheweb.salvo.model.*;
 import com.codeoftheweb.salvo.repository.GamePlayerRepository;
 import com.codeoftheweb.salvo.repository.GameRepository;
+import com.codeoftheweb.salvo.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,6 +19,9 @@ public class SalvoController {
 
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @RequestMapping("/games")
     public List<Object> getAllGames() {
@@ -49,6 +47,10 @@ public class SalvoController {
                 .collect(Collectors.toList());
     }
 
+    private List<Player> getAllPlayers(){
+        return playerRepository.findAll();
+    }
+
     @RequestMapping("/game_view/{gamePlayerID}")
     public Map<String, Object> getGameView(@PathVariable Long gamePlayerID) {
         GamePlayer gamePlayer = gamePlayerRepository.getOne(gamePlayerID);
@@ -60,5 +62,25 @@ public class SalvoController {
         dto.put("salvoes", salvoesList(gamePlayer.getSalvoes()));
         return dto;
     }
+
+    @RequestMapping("/leaderboard")
+    public List<Map<String,Object>> getScoreView(){
+        List<Map<String,Object>> finalList = new ArrayList<>();
+        this.getAllPlayers().forEach(player -> {
+            if(!player.getScores().isEmpty()) {
+                Map<String, Object> dto = new LinkedHashMap<>();
+                Map<String, Object> dtoScore = new LinkedHashMap<>();
+                dtoScore.put("total", player.getTotalScore());
+                dtoScore.put("won", player.getTotalWins());
+                dtoScore.put("lost", player.getTotalLoses());
+                dtoScore.put("tied", player.getTotalTies());
+                dto.put("name",player.getEmail());
+                dto.put("score",dtoScore);
+                finalList.add(dto);
+            }
+        });
+        return finalList;
+    }
+
 
 }

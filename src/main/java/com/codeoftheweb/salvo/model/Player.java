@@ -23,7 +23,7 @@ public class Player {
     private String name;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<Score> scores;
@@ -74,7 +74,7 @@ public class Player {
     }
 
     public List<Game> getGames() {
-        return gamePlayers.stream().map(sub -> sub.getGame()).collect(toList());
+        return gamePlayers.stream().map(GamePlayer::getGame).collect(toList());
     }
 
     public Set<Score> getScores() {
@@ -96,6 +96,33 @@ public class Player {
         this.scores.add(score);
     }
 
+    public Double getTotalScore(){
+        return getScores()
+                .stream()
+                .mapToDouble(Score::getScore).sum();
+    }
+
+    public Long getTotalWins(){
+        return getScores()
+                .stream()
+                .filter(score -> score.getScore() == 1d)
+                .count();
+    }
+
+    public Long getTotalLoses(){
+        return getScores()
+                .stream()
+                .filter(score -> score.getScore() == 0d)
+                .count();
+    }
+
+    public Long getTotalTies(){
+        return getScores()
+                .stream()
+                .filter(score -> score.getScore() == 0.5d)
+                .mapToDouble(Score::getScore).count();
+    }
+    
     public Map<String, Object> toDTO() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", getId());
