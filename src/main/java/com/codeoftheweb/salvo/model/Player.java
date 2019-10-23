@@ -122,7 +122,7 @@ public class Player {
                 .filter(score -> score.getScore() == 0.5d)
                 .mapToDouble(Score::getScore).count();
     }
-    
+
     public Map<String, Object> toDTO() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", getId());
