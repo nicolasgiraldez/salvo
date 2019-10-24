@@ -22,10 +22,10 @@ public class SalvoApplication {
         return (args) -> {
 
             // save a couple of players
-            Player jackBauer = new Player("j.bauer@ctu.gov", "Jack Bauer");
-            Player chloeOBrian = new Player("c.obrian@ctu.gov", "Chloe O'Brian");
-            Player kimBauer = new Player("kim_bauer@gmail.com", "Kim Bauer");
-            Player tonyAlmeida = new Player("t.almeida@ctu.gov", "Tony Almeida");
+            Player jackBauer = new Player("j.bauer@ctu.gov", "Jack Bauer", "24");
+            Player chloeOBrian = new Player("c.obrian@ctu.gov", "Chloe O'Brian", "42");
+            Player kimBauer = new Player("kim_bauer@gmail.com", "Kim Bauer", "kb");
+            Player tonyAlmeida = new Player("t.almeida@ctu.gov", "Tony Almeida", "mole");
 
             playerRepository.save(jackBauer);
             playerRepository.save(chloeOBrian);
