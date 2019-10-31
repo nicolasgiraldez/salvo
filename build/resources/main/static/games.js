@@ -1,70 +1,50 @@
 $(function () {
 
-    function createTableFromJSON() {
-        var myBooks = [
-            {
-                "Book ID": "1",
-                "Book Name": "Computer Architecture",
-                "Category": "Computers",
-                "Price": "125.60"
-            },
-            {
-                "Book ID": "2",
-                "Book Name": "Asp.Net 4 Blue Book",
-                "Category": "Programming",
-                "Price": "56.00"
-            },
-            {
-                "Book ID": "3",
-                "Book Name": "Popular Science",
-                "Category": "Science",
-                "Price": "210.40"
-            }
-        ]
+    function createLeaderBoardTable(leaderboard) {
 
-        // EXTRACT VALUE FOR HTML HEADER.
-        // ('Book ID', 'Book Name', 'Category' and 'Price')
-        var col = [];
-        for (var i = 0; i < myBooks.length; i++) {
-            for (var key in myBooks[i]) {
-                if (col.indexOf(key) === -1) {
-                    col.push(key);
-                }
-            }
-        }
+        // Encabezados de las columnas
+        let columns = ["Name", "Total", "Won", "Lost", "Tied"];
 
-        // CREATE DYNAMIC TABLE.
-        var table = document.createElement("table");
+        // Creamos la tabla
+        let table = document.createElement("table");
 
-        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+        // Creamos el encabezado
 
-        var tr = table.insertRow(-1);                   // TABLE ROW.
+        let tr = table.insertRow(-1);
 
-        for (var i = 0; i < col.length; i++) {
-            var th = document.createElement("th");      // TABLE HEADER.
-            th.innerHTML = col[i];
+        for (var i = 0; i < columns.length; i++) {
+            var th = document.createElement("th");
+            th.innerHTML = columns[i];
             tr.appendChild(th);
         }
 
-        // ADD JSON DATA TO THE TABLE AS ROWS.
-        for (var i = 0; i < myBooks.length; i++) {
+        // Agregamos los datos en las filas
+        for (var i = 0; i < leaderboard.length; i++) {
+
+            let nameCell, totalCell, wonCell, lostCell, tiedCell;
 
             tr = table.insertRow(-1);
 
-            for (var j = 0; j < col.length; j++) {
-                var tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = myBooks[i][col[j]];
-            }
+            nameCell = tr.insertCell(-1);
+            nameCell.innerHTML = leaderboard[i].name;
+            totalCell = tr.insertCell(-1);
+            totalCell.innerHTML = leaderboard[i].score.total;
+            wonCell = tr.insertCell(-1);
+            wonCell.innerHTML = leaderboard[i].score.won;
+            lostCell = tr.insertCell(-1);
+            lostCell.innerHTML = leaderboard[i].score.lost;
+            tiedCell = tr.insertCell(-1);
+            tiedCell.innerHTML = leaderboard[i].score.tied;
+
         }
 
-        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-        var divContainer = document.getElementById("showData");
+        // Agregamos la nueva tabla al contenedor
+        var divContainer = document.getElementById("leaderboard");
         divContainer.innerHTML = "";
         divContainer.appendChild(table);
     }
 
     // display list
-
     function updateList(data) {
         let htmlList = data.map(function (games) {
             return '<li>' + new Date(games.created).toLocaleString() + ' ' + games.gamePlayers.map(function (p) {
@@ -75,12 +55,21 @@ $(function () {
     }
 
     // load and display JSON sent by server for /api/games
-
     function loadData() {
         $.get("/api/games")
             .done(function (data) {
                 updateList(data);
-                createTableFromJSON();
+            })
+            .fail(function (jqXHR, textStatus) {
+                alert("Failed: " + textStatus);
+            });
+    }
+
+    // cargamos y mostramos la tabla de puntajes
+    function loadLeaderBoardData() {
+        $.get("/api/leaderboard")
+            .done(function (leaderboard) {
+                createLeaderBoardTable(leaderboard);
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Failed: " + textStatus);
@@ -88,4 +77,5 @@ $(function () {
     }
 
     loadData();
+    loadLeaderBoardData();
 });

@@ -5,6 +5,9 @@ import com.codeoftheweb.salvo.repository.GamePlayerRepository;
 import com.codeoftheweb.salvo.repository.GameRepository;
 import com.codeoftheweb.salvo.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -23,6 +26,27 @@ public class SalvoController {
     @Autowired
     private PlayerRepository playerRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @RequestMapping(path = "/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> register(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam String password) {
+
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+        }
+
+        if (playerRepository.findByEmail(email) !=  null) {
+            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+        }
+
+        playerRepository.save(new Player(email, name, passwordEncoder.encode(password)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @RequestMapping("/games")
     public List<Object> getAllGames() {
         List<Game> games = gameRepository.findAll();
@@ -31,19 +55,19 @@ public class SalvoController {
 
     private List<Map> gamePlayerList(Set<GamePlayer> gamePlayers) {
         return gamePlayers.stream()
-                .map(gamePlayer -> gamePlayer.toDTO())
+                .map(GamePlayer::toDTO)
                 .collect(Collectors.toList());
     }
 
     private List<Map> shipsList(Set<Ship> ships) {
         return ships.stream()
-                .map(ship -> ship.toDTO())
+                .map(Ship::toDTO)
                 .collect(Collectors.toList());
     }
 
     private List<Map> salvoesList(Set<Salvo> salvoes) {
         return salvoes.stream()
-                .map(salvo -> salvo.toDTO())
+                .map(Salvo::toDTO)
                 .collect(Collectors.toList());
     }
 
