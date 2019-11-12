@@ -49,7 +49,7 @@ public class SalvoController {
         playerRepository.save(new Player(email, name, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    
+
     private Player getAuthenticatedPlayer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
