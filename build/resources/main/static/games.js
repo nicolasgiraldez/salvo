@@ -50,6 +50,11 @@ $(document).ready(function () {
     // display list
     function updateList(data) {
         let htmlList = data.games.map(function (game) {
+            
+            let joinButtonHtml = "";
+            if (game.gamePlayers.size < 2 ) {
+                joinButtonHtml = '<button class="join-game-button">Join</button>';
+            }
 
             // si el jugador actual es uno de los gameplayers de un juego, muestra el link al juego en la lista
             if (game.gamePlayers.map(function (gamePlayer) {
@@ -65,9 +70,10 @@ $(document).ready(function () {
             }
 
             // sino, muestra los datos del juego sin el link
+
             return '<li>' + new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (gamePlayer) {
                 return gamePlayer.player.email
-            }).join(', ') + '</li>';
+            }).join(', ') + joinButtonHtml + '</li>';
         }).join('');
         document.getElementById("game-list").innerHTML = htmlList;
     }
@@ -157,6 +163,19 @@ $(document).ready(function () {
                 console.log("signup failed");
             });
 
+    });
+
+    $('#new-game-button').on('click', function (event) {
+        event.preventDefault();
+        $.post("/api/games")
+            .done(function (data) {
+                console.log(data);
+                console.log("game created");
+                loadData();
+            })
+            .fail(function (data) {
+                console.log("game creation failed");
+            });
     });
 
     // actualiza el usuario actual y según si está logueado o no, muestra los formularios de login/logout/signup

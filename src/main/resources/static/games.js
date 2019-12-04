@@ -51,6 +51,11 @@ $(document).ready(function () {
     function updateList(data) {
         let htmlList = data.games.map(function (game) {
 
+            let joinButtonHtml = "";
+            if (game.gamePlayers.length < 2) {
+                joinButtonHtml = '<button class="join-game-button" data-gameid="' + game.id + '">Join</button>';
+            }
+
             // si el jugador actual es uno de los gameplayers de un juego, muestra el link al juego en la lista
             if (game.gamePlayers.map(function (gamePlayer) {
                 if (gamePlayer.player.email == currentUser) {
@@ -59,17 +64,31 @@ $(document).ready(function () {
                 return gamePlayer.player.email
             }).includes(currentUser)) {
                 return '<a href="game.html?gp=' + currentUserGamePlayerId + '"><li>' +
-                    new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (p) {
-                        return p.player.email
+                    new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (gamePlayer) {
+                        return gamePlayer.player.email
                     }).join(', ') + '</li></a>';
             }
 
             // sino, muestra los datos del juego sin el link
+
             return '<li>' + new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (gamePlayer) {
                 return gamePlayer.player.email
-            }).join(', ') + '</li>';
+            }).join(', ') + joinButtonHtml + '</li>';
         }).join('');
         document.getElementById("game-list").innerHTML = htmlList;
+
+        $('.join-game-button').on('click', function (event) {
+            event.preventDefault();
+            $.post("/api/game/" + $(this).data('gameid') + "/players")
+                .done(function (data) {
+                    console.log(data);
+                    console.log("joined game");
+                    loadData();
+                })
+                .fail(function (data) {
+                    console.log("game join failed");
+                });
+        });
     }
 
     // load and display JSON sent by server for /api/games
