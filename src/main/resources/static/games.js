@@ -159,6 +159,19 @@ $(document).ready(function () {
 
     });
 
+    $('#new-game-button').on('click', function (event) {
+        event.preventDefault();
+        $.post("/api/games")
+            .done(function (data) {
+                console.log(data);
+                console.log("game created");
+                loadData();
+            })
+            .fail(function (data) {
+                console.log("game creation failed");
+            });
+    });
+
     // actualiza el usuario actual y según si está logueado o no, muestra los formularios de login/logout/signup
     function updateCurrentUser() {
         $.get("/api/myusername")

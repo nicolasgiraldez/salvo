@@ -167,4 +167,45 @@ public class SalvoController {
         return new ResponseEntity<>(responseMap, httpStatus);
     }
 
+    @RequestMapping(path= "/games", method = RequestMethod.POST)
+    public Object createGame() {
+        Player authenticatedPlayer = this.getAuthenticatedPlayer();
+        if (authenticatedPlayer == null) {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR, ResponseEntityMessages.MSG_NO_LOGUEADO,
+                    HttpStatus.UNAUTHORIZED);
+        } else {
+            Game newGame = new Game();
+            gameRepository.save(newGame);
+            GamePlayer gamePlayer = new GamePlayer(newGame, authenticatedPlayer);
+            gamePlayerRepository.save(gamePlayer);
+            return this.createResponseEntity(ResponseEntityMessages.KEY_GPID,
+                    gamePlayer.getId(), HttpStatus.CREATED);
+        }
+    }
+
+    @RequestMapping(path="/game/{gameId}/players", method = RequestMethod.POST)
+    public Object joinGame(@PathVariable Long gameId) {
+        Player player = getAuthenticatedPlayer();
+
+        if (player == null) {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR, ResponseEntityMessages.MSG_NO_LOGUEADO,
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        Game game = gameRepository.getOne(gameId);
+
+        if (game == null) {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR, ResponseEntityMessages.MSG_JUEGO_NO_ENCONTRADO,
+                    HttpStatus.FORBIDDEN);
+        }
+
+        if (game.countGamePlayers() == 2) {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR, ResponseEntityMessages.MSG_JUEGO_COMPLETO,
+                    HttpStatus.FORBIDDEN);
+        }
+        GamePlayer gamePlayer = new GamePlayer(game, player);
+        gamePlayerRepository.save(gamePlayer);
+        return this.createResponseEntity(ResponseEntityMessages.KEY_GPID, gamePlayer.getId(),HttpStatus.CREATED);
+    }
+
 }

@@ -95,4 +95,7 @@ public class Game {
                 .collect(Collectors.toList());
     }
 
+    public int countGamePlayers() {
+        return this.gamePlayers.size();
+    }
 }
