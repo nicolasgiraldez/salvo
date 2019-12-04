@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo.controller;
 
+import com.codeoftheweb.salvo.ResponseEntityMessages;
 import com.codeoftheweb.salvo.model.*;
 import com.codeoftheweb.salvo.repository.GamePlayerRepository;
 import com.codeoftheweb.salvo.repository.GameRepository;
@@ -100,8 +101,28 @@ public class SalvoController {
     }
 
     @RequestMapping("/game_view/{gamePlayerID}")
-    public Map<String, Object> getGameView(@PathVariable Long gamePlayerID) {
+    public Object getGameView(@PathVariable Long gamePlayerID) {
+
+        Player authenticatedPlayer = this.getAuthenticatedPlayer();
+        if (authenticatedPlayer == null) {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR, ResponseEntityMessages.MSG_NO_LOGUEADO,
+                    HttpStatus.UNAUTHORIZED);
+        }
+
+        long authenticatedPlayerId = authenticatedPlayer.getId();
         GamePlayer gamePlayer = gamePlayerRepository.getOne(gamePlayerID);
+
+        //verifico que sea una partida en la cual se encuentra el usuario autenticado en la aplicacion
+        if (gamePlayer.getPlayer().getId() ==  authenticatedPlayerId) {
+            return this.generateGameView(gamePlayer);
+        } else {
+            return this.createResponseEntity(ResponseEntityMessages.KEY_ERROR,
+                    ResponseEntityMessages.MSG_JUGADOR_DISTINTO_AL_LOGUEADO, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+    private Map<String,Object> generateGameView(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("id", gamePlayer.getGame().getId());
         dto.put("created", gamePlayer.getGame().getCreationDate());
@@ -138,6 +159,12 @@ public class SalvoController {
         } catch (Exception e) {
             return "Guest";
         }
+    }
+
+    private ResponseEntity<Object> createResponseEntity(String tipoDeRespuesta, Object valor, HttpStatus httpStatus ) {
+        Map<String,Object> responseMap = new LinkedHashMap<>();
+        responseMap.put(tipoDeRespuesta, valor);
+        return new ResponseEntity<>(responseMap, httpStatus);
     }
 
 }

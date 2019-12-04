@@ -1,4 +1,7 @@
-$(document).ready(function(){
+$(document).ready(function () {
+
+    let currentUser = "Guest";
+    let currentUserGamePlayerId;
 
     function createLeaderBoardTable(leaderboard) {
 
@@ -46,9 +49,24 @@ $(document).ready(function(){
 
     // display list
     function updateList(data) {
-        let htmlList = data.games.map(function (games) {
-            return '<li>' + new Date(games.created).toLocaleString() + ' ' + games.gamePlayers.map(function (p) {
-                return p.player.email
+        let htmlList = data.games.map(function (game) {
+
+            // si el jugador actual es uno de los gameplayers de un juego, muestra el link al juego en la lista
+            if (game.gamePlayers.map(function (gamePlayer) {
+                if (gamePlayer.player.email == currentUser) {
+                    currentUserGamePlayerId = gamePlayer.id;
+                }
+                return gamePlayer.player.email
+            }).includes(currentUser)) {
+                return '<a href="game.html?gp=' + currentUserGamePlayerId + '"><li>' +
+                    new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (p) {
+                        return p.player.email
+                    }).join(', ') + '</li></a>';
+            }
+
+            // sino, muestra los datos del juego sin el link
+            return '<li>' + new Date(game.created).toLocaleString() + ' ' + game.gamePlayers.map(function (gamePlayer) {
+                return gamePlayer.player.email
             }).join(', ') + '</li>';
         }).join('');
         document.getElementById("game-list").innerHTML = htmlList;
@@ -141,20 +159,22 @@ $(document).ready(function(){
 
     });
 
+    // actualiza el usuario actual y según si está logueado o no, muestra los formularios de login/logout/signup
     function updateCurrentUser() {
         $.get("/api/myusername")
             .done(function (username) {
                 $("#current-user").text("Current user: " + username);
+                currentUser = username;
                 if (username != "Guest") {
                     $("#login-form").hide();
                     $("#logout-button").show();
                     $("#signup-form").hide();
-                }
-                else {
+                } else {
                     $("#login-form").show();
                     $("#logout-button").hide();
                     $("#signup-form").show();
                 }
+                loadData();
             })
             .fail(function (jqXHR, textStatus) {
                 alert("Failed: " + textStatus);
