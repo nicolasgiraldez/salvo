@@ -7,12 +7,14 @@ import com.codeoftheweb.salvo.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,5 +130,14 @@ public class SalvoController {
         return finalList;
     }
 
+    @RequestMapping(value = "/myusername", method = RequestMethod.GET)
+    @ResponseBody
+    public String currentUserName(Principal principal) {
+        try {
+            return principal.getName();
+        } catch (Exception e) {
+            return "Guest";
+        }
+    }
 
 }

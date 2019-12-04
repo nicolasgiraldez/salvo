@@ -6,8 +6,44 @@
 </head>
 <body>
 
+<div id="current-user"></div>
+
+<form id="login-form" method="post">
+    <div class="container">
+        <h3>Login</h3>
+        <label for="login-email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Username" name="email" id="login-email" required>
+
+        <label for="login-password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" id="login-password" required>
+
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+<button id="logout-button" style="display: none">Logout</button>
+
+<form id="signup-form" method="post">
+    <div class="container">
+        <h3>Sign Up</h3>
+
+        <label for="signup-name"><b>Name</b></label>
+        <input type="text" placeholder="Enter Name" name="name" id="signup-name" required>
+
+        <label for="signup-email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Username" name="email" id="signup-email" required>
+
+        <label for="signup-password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" id="signup-password" required>
+
+        <button type="submit">Sign Up</button>
+    </div>
+</form>
+
+<h2>Game List</h2>
 <ol id="game-list"></ol>
 
+<h2>Leaderboard</h2>
 <div id="leaderboard"></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

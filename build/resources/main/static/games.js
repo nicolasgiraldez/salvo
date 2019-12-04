@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(function(){
 
     function createLeaderBoardTable(leaderboard) {
 
@@ -46,7 +46,7 @@ $(function () {
 
     // display list
     function updateList(data) {
-        let htmlList = data.map(function (games) {
+        let htmlList = data.games.map(function (games) {
             return '<li>' + new Date(games.created).toLocaleString() + ' ' + games.gamePlayers.map(function (p) {
                 return p.player.email
             }).join(', ') + '</li>';
@@ -76,6 +76,80 @@ $(function () {
             });
     }
 
+    $("#login-form").on("submit", function (event) {
+
+        event.preventDefault()
+
+        $.post("/api/login",
+            {
+                email: $("#login-email").val(),
+                password: $("#login-password").val()
+            })
+            .done(function () {
+                console.log("login ok");
+                updateCurrentUser();
+            })
+            .fail(function () {
+                console.log("login failed");
+            });
+
+    });
+
+    $("#logout-button").on("click", function (event) {
+
+        event.preventDefault()
+
+        $.post("/api/logout")
+            .done(function () {
+                console.log("logout ok");
+                updateCurrentUser();
+            })
+            .fail(function () {
+                console.log("logout failed");
+            });
+
+    });
+
+    $("#signup-form").on("submit", function (event) {
+
+        event.preventDefault()
+
+        $.post("/api/players",
+            {
+                name: $("#signup-name").val(),
+                email: $("#signup-email").val(),
+                password: $("#signup-password").val()
+            })
+            .done(function () {
+                console.log("signup ok");
+            })
+            .fail(function () {
+                console.log("signup failed");
+            });
+
+    });
+
+    function updateCurrentUser() {
+        $.get("/api/myusername")
+            .done(function (username) {
+                $("#current-user").text("Current user: " + username);
+                if (username != "Guest") {
+                    $("#login-form").hide();
+                    $("#logout-button").show();
+                    $("#signup-form").hide();
+                }
+                else {
+                    $("#login-form").show();
+                    $("#logout-button").hide();
+                    $("#signup-form").show();
+                }
+            })
+            .fail(function (jqXHR, textStatus) {
+                alert("Failed: " + textStatus);
+            });
+    }
+
     loadData();
     loadLeaderBoardData();
+    updateCurrentUser();
 });
