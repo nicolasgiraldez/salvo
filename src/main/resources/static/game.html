@@ -1,31 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ship Locations!</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles/normalize.css" />
+        <link rel="stylesheet" href="styles/style.css" />
+        <title>Battleship Grid</title>
+    </head>
 <body>
 
-<div class="container">
-    <h2 id="players-data"></h2>
-    <h3>Ships</h3>
-    <table class="ship-grid">
-        <thead id="ship-grid-numbers">
-        </thead>
-        <tbody id="ship-grid-rows">
-        </tbody>
-    </table>
-    <h3>Salvoes</h3>
-    <table class="salvo-grid">
-        <thead id="salvo-grid-numbers">
-        </thead>
-        <tbody id="salvo-grid-rows">
-        </tbody>
-    </table>
-</div>
+    <div class="flex-container">
+        <div id="dock">
+            
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="game.js"></script>
+            <!-- Los nuevos barcos pendientes de ser ubicados se muestran acá -->
+        
+        </div>
+        
+        <div class="grid active" id="grid-ships">
+            <!-- La grilla se muestra acá -->
+        </div>
+        <div class="grid" id="grid-salvoes">
+            
+        </div>
+    </div>
+
+
+    <script  src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="scripts/ships.js"></script>
+    <script src="scripts/grid.js"></script>
+    <script src="scripts/game.js"></script>
 </body>
 </html>

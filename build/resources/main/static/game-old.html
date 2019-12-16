@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ship Locations!</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2 id="players-data"></h2>
+    <h3>Ships</h3>
+    <table class="ship-grid">
+        <thead id="ship-grid-numbers">
+        </thead>
+        <tbody id="ship-grid-rows">
+        </tbody>
+    </table>
+    <h3>Salvoes</h3>
+    <table class="salvo-grid">
+        <thead id="salvo-grid-numbers">
+        </thead>
+        <tbody id="salvo-grid-rows">
+        </tbody>
+    </table>
+</div>
+
+<div class="grid-stack">
+    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">
+        <div class="grid-stack-item-content">my first widget</div>
+    </div>
+    <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
+        <div class="grid-stack-item-content">another widget!</div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="scripts/game.js"></script>
+
+</body>
+</html>
